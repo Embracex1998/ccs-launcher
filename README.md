@@ -18,8 +18,16 @@ Claude Code Switcher — 在任意终端里秒切不同的 Claude Code 配置（
 
 ## 安装
 
+### 方式一：通过 NPM 全局安装（推荐）
+
 ```bash
-cd ~/ccs-cli
+npm install -g ccs-launcher
+```
+
+### 方式二：本地 link 安装
+
+```bash
+cd ~/ccs-launcher
 npm link
 ```
 
