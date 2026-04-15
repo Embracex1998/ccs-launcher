@@ -91,11 +91,12 @@ function applyProfileToSettings(configDir, profile) {
 
 function ask(question, hidden = false) {
   return new Promise((resolve) => {
+    if (hidden) process.stdout.write(question);
     const output = hidden
       ? new Writable({ write(chunk, encoding, callback) { callback(); } })
       : process.stdout;
     const rl = readline.createInterface({ input: process.stdin, output });
-    rl.question(question, (answer) => {
+    rl.question(hidden ? '' : question, (answer) => {
       rl.close();
       if (hidden) console.log();
       resolve(answer.trim());
@@ -131,6 +132,10 @@ async function selectProfile() {
   const selected = profiles[idx - 1];
   console.log(`→ 启动配置: ${selected.name}`);
 
+  if (!selected.apiKey) {
+    console.log('⚠ 当前配置未设置 API Key，Claude Code 将尝试使用系统环境变量中的 ANTHROPIC_AUTH_TOKEN。');
+  }
+
   applyProfileToSettings(selected.configDir, selected);
 
   const env = { ...process.env, CLAUDE_CONFIG_DIR: selected.configDir };
@@ -157,6 +162,9 @@ async function cmdAdd(args) {
 
   if (apiKey === undefined) {
     apiKey = await ask('API Key / Auth Token (留空则继承当前环境): ', true);
+    if (!apiKey) {
+      console.log('ℹ 未设置 API Key，将继承当前环境变量 ANTHROPIC_AUTH_TOKEN。');
+    }
   }
 
   let apiUrl, modelName;
@@ -257,6 +265,9 @@ async function cmdEdit(args) {
   saveProfiles(profiles);
 
   applyProfileToSettings(configDir, p);
+  if (!p.apiKey) {
+    console.log('ℹ 当前配置未设置 API Key，将继承当前环境变量 ANTHROPIC_AUTH_TOKEN。');
+  }
   console.log('✓ 已更新配置');
 }
 
