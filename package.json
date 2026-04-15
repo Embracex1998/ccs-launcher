@@ -1,0 +1,18 @@
+{
+  "name": "ccs-launcher",
+  "version": "1.0.0",
+  "description": "Claude Code 配置切换启动器",
+  "bin": {
+    "ccs": "bin/ccs.js"
+  },
+  "files": [
+    "bin/",
+    "README.md"
+  ],
+  "keywords": ["claude", "claude-code", "launcher", "profile", "cli"],
+  "author": "ccs-cli",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  }
+}
